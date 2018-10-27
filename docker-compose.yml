@@ -1,0 +1,35 @@
+
+version: '2.3'
+services:
+  cassandra:
+    hostname: 127.0.0.1 
+    image: "cassandra:3.10"
+    restart: always
+    volumes:
+     - ./target/database/data:/var/lib/cassandra
+     - ./docker-entrypoint-initdb.d:/home/risksense/dockers/test/init.cql
+    container_name: cas_db
+    mem_limit: 2g
+    #environment:
+    # CASSANDRA_RPC_ADDRESS: 127.0.0.1
+    # CASSANDRA_LISTEN_ADDRESS: 127.0.0.1
+    ports:
+     - 7000:7000
+     - 7001:7001
+     - 7199:7199
+     - 9042:9042
+     - 9160:9160
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: pass
+    ports:
+     - 3306:3306
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
